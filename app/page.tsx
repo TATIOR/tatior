@@ -78,7 +78,7 @@ export default function Home() {
                 </button>
                 <div className="product-body">
                   <div className="product-meta"><span>{p.brand}</span><span>{p.category}</span></div>
-                  <button className="product-title-button" onClick={()=>setSelected(p);setSelectedImage(0)}}><h3>{p.name}</h3></button>
+                  <button className="product-title-button" onClick={()=>{setSelected(p);setSelectedImage(0)}}><h3>{p.name}</h3></button>
                   <p>{p.description}</p>
                   <div className="specs">{p.specs.slice(0,3).map(s=><span key={s}>{s}</span>)}</div>
                   <div className="product-bottom"><div><strong>{money(p.price)}</strong>{p.oldPrice&&<del>{money(p.oldPrice)}</del>}</div><a href={wa(p)} target="_blank" rel="noreferrer" className="buy">Acheter ↗</a></div>
@@ -107,6 +107,7 @@ export default function Home() {
           <div className="product-modal" role="dialog" aria-modal="true" aria-label={selected.name} onClick={e=>e.stopPropagation()}>
             <button className="modal-close" onClick={()=>setSelected(null)} aria-label="Fermer">×</button>
             <div className="modal-image"><img src={selected.images[selectedImage] ?? selected.images[0]} alt={selected.name}/><span className={selected.stock>0?"stock-badge":"stock-badge stock-out"}>{stockLabel(selected.stock)}</span></div>
+            <div className="modal-gallery">{selected.images.slice(0,4).map((img,i)=><button key={`${selected.id}-${i}`} className={selectedImage===i?"gallery-thumb active":"gallery-thumb"} onClick={()=>setSelectedImage(i)} aria-label={`Voir photo ${i+1}`}><img src={img} alt={`${selected.name} vue ${i+1}`}/></button>)}</div>
             <div className="modal-content">
               <div className="product-meta"><span>{selected.brand}</span><span>{selected.category}</span></div>
               <h2>{selected.name}</h2>
