@@ -37,7 +37,8 @@ android:{fr:{d:"Une sélection de smartphones Android disponible chez TATIOR.",c
 const money=(n:number)=>n?new Intl.NumberFormat("fr-FR").format(n)+" FCFA":"Sur demande";
 
 export default function Home(){
-const [category,setCategory]=useState("All");\nconst [catalog,setCatalog]=useState<Product[]>(products);
+const [category,setCategory]=useState("All");
+const [catalog,setCatalog]=useState<Product[]>(products);
 const [language,setLanguage]=useState<Lang>("fr");
 const [query,setQuery]=useState("");
 const [selected,setSelected]=useState<Product|null>(null);
