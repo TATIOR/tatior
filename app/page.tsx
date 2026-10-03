@@ -26,33 +26,38 @@ const products: Product[] = [
 ];
 
 const categories = ["All","Laptops","Phones","Monitors","Accessories"];
+const copy={fr:{all:'Accueil',laptops:'Ordinateurs',phones:'Téléphones',monitors:'Moniteurs',accessories:'Accessoires',products:'Produits',whatsapp:'WhatsApp',search:'Rechercher un produit...',catalogue:'CATALOGUE',title:'Trouvez votre prochain appareil.',count:'produits',buy:'Acheter ↗',view:'Voir la fiche ↗',inStock:'En stock',order:'Sur commande',trust1:'Testés avant la vente',trust1p:'Nous privilégions des produits vérifiés avant de vous les proposer.',trust2:'Communication claire',trust2p:'Confirmez directement avec TATIOR la disponibilité, l’état et le prix.',trust3:'Assistance humaine',trust3p:'Besoin de conseils ? Dites-nous ce que vous cherchez et nous vous aidons.',need:'BESOIN DE QUELQUE CHOSE ?',contactTitle:'Dites-nous ce que vous recherchez.',contactText:'Envoyez-nous votre budget, l’appareil souhaité ou la référence exacte. Nous vérifions la disponibilité.',contact:'Contacter TATIOR sur WhatsApp ↗',condition:'État',specs:'CARACTÉRISTIQUES',buyWhats:'Acheter sur WhatsApp ↗'},en:{all:'Home',laptops:'Laptops',phones:'Phones',monitors:'Monitors',accessories:'Accessories',products:'Products',whatsapp:'WhatsApp',search:'Search for a product...',catalogue:'CATALOGUE',title:'Find your next device.',count:'products',buy:'Buy ↗',view:'View product ↗',inStock:'In stock',order:'On order',trust1:'Tested before sale',trust1p:'We focus on products that are checked before they reach you.',trust2:'Clear communication',trust2p:'Confirm availability, condition and price directly with TATIOR.',trust3:'Human support',trust3p:'Need advice? Tell us what you need and we help you choose.',need:'NEED SOMETHING?',contactTitle:'Tell us what you are looking for.',contactText:'Send us your budget, preferred device or exact model. We’ll check availability.',contact:'Contact TATIOR on WhatsApp ↗',condition:'Condition',specs:'SPECIFICATIONS',buyWhats:'Buy on WhatsApp ↗'}} as const;
+
 const money = (n:number) => n ? new Intl.NumberFormat("fr-FR").format(n)+" FCFA" : "Sur demande";
 const stockLabel = (stock:number) => stock > 5 ? "En stock" : stock > 0 ? `Plus que ${stock} en stock` : "Sur commande";
 const wa = (p:Product) => "https://wa.me/237000000000?text="+encodeURIComponent(`Bonjour TATIOR, je suis intéressé par: ${p.name}. Pouvez-vous confirmer la disponibilité et le prix ?`);
 
 export default function Home() {
   const [category,setCategory] = useState("All");
+  const [language,setLanguage] = useState<"fr"|"en">("fr");
+  const t=copy[language];
   const [query,setQuery] = useState("");
   const [selected,setSelected] = useState<Product|null>(null);
   const [selectedImage,setSelectedImage] = useState(0);
 
-  const filtered = useMemo(() => products.filter(p =>
-    (category==="All" || p.category===category) &&
-    `${p.name} ${p.brand} ${p.category}`.toLowerCase().includes(query.toLowerCase())
-  ), [category,query]);
+  const filtered = useMemo(() => products.filter(p => (category==="All" || p.category===category) && (p.name+" "+p.brand+" "+p.category).toLowerCase().includes(query.toLowerCase())), [category,query]);
+  const categoryLabel=(c:string)=>({All:t.all,Laptops:t.laptops,Phones:t.phones,Monitors:t.monitors,Accessories:t.accessories}[c] ?? c);
+  const textFor=(p:Product)=>({description:p.description,condition:p.condition,specs:p.specs});
+  const stockLabel=(stock:number)=>stock>5?t.inStock:stock>0?(language==="fr"?"Plus que "+stock+" en stock":"Only "+stock+" left"):t.order;
+  const wa=(p:Product)=>"https://wa.me/237000000000?text="+encodeURIComponent((language==="fr"?"Bonjour TATIOR, je suis intéressé par: ":"Hello TATIOR, I am interested in: ")+p.name);
 
   return (
     <main>
       <header className="site-header">
         <div className="container header-inner">
           <a href="/" className="logo">TATIOR</a>
-          <div className="search"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher un produit..." /></div>
-          <div className="header-actions"><a href="#products" className="header-link">Produits</a><a href="#contact" className="whatsapp-top">WhatsApp</a></div>
+          <div className="search"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t.search} /></div>
+          <div className="header-actions"><a href="#products" className="header-link">{t.products}</a><a href="#contact" className="whatsapp-top">{t.whatsapp}</a><button className="language-switch" onClick={()=>setLanguage(language==="fr"?"en":"fr")}><span className={language==="fr"?"active":""}>FR</span><i>/</i><span className={language==="en"?"active":""}>EN</span></button></div>
         </div>
-        <div className="category-bar"><div className="container categories">{categories.map(c=><button key={c} className={category===c?"active":""} onClick={()=>setCategory(c)}>{c}</button>)}</div></div>
+        <div className="category-bar"><div className="container categories">{categories.map(c=><button key={c} className={category===c?"active":""} onClick={()=>setCategory(c)}>{categoryLabel(c)}</button>)}</div></div>
       </header>
 
-      <section className="hero-shop">
+      {category==="All" && <section className="hero-shop">
         <div className="container hero-grid">
           <div className="hero-copy-shop">
             <div className="kicker">TATIOR · TECHNOLOGY</div>
@@ -63,25 +68,25 @@ export default function Home() {
           </div>
           <div className="hero-visual"><div className="hero-card"><span>TATIOR</span><strong>YOUR<br/>TECH.<br/><i>SIMPLIFIED.</i></strong><small>SELECTED TECHNOLOGY</small></div></div>
         </div>
-      </section>
+      </section>}
 
       <section id="products" className="products-section">
         <div className="container">
-          <div className="section-head"><div><div className="kicker">CATALOGUE</div><h2>Find your next device.</h2></div><span>{filtered.length} produits</span></div>
+          <div className="section-head"><div><div className="kicker">{t.catalogue}</div><h2>{category==="All"?t.title:categoryLabel(category)}</h2></div><span>{filtered.length} {t.count}</span></div>
           <div className="product-grid">
             {filtered.map(p=>(
               <article className="product-card" key={p.id}>
                 <button className="product-image product-image-button" onClick={()=>{setSelected(p);setSelectedImage(0)}} aria-label={`Voir ${p.name}`}>
-                  <img src={p.images[0]} alt={p.name}/><span className="condition-badge">{p.condition}</span>
+                  <img src={p.images[0]} alt={p.name}/><span className="condition-badge">{textFor(p).condition}</span>
                   <span className={p.stock>0?"stock-badge":"stock-badge stock-out"}>{stockLabel(p.stock)}</span>
-                  <span className="view-badge">Voir la fiche ↗</span>
+                  <span className="view-badge">{t.view}</span>
                 </button>
                 <div className="product-body">
                   <div className="product-meta"><span>{p.brand}</span><span>{p.category}</span></div>
                   <button className="product-title-button" onClick={()=>{setSelected(p);setSelectedImage(0)}}><h3>{p.name}</h3></button>
-                  <p>{p.description}</p>
-                  <div className="specs">{p.specs.slice(0,3).map(s=><span key={s}>{s}</span>)}</div>
-                  <div className="product-bottom"><div><strong>{money(p.price)}</strong>{p.oldPrice&&<del>{money(p.oldPrice)}</del>}</div><a href={wa(p)} target="_blank" rel="noreferrer" className="buy">Acheter ↗</a></div>
+                  <p>{textFor(p).description}</p>
+                  <div className="specs">{textFor(p).specs.slice(0,3).map(s=><span key={s}>{s}</span>)}</div>
+                  <div className="product-bottom"><div><strong>{money(p.price)}</strong>{p.oldPrice&&<del>{money(p.oldPrice)}</del>}</div><a href={wa(p)} target="_blank" rel="noreferrer" className="buy">{t.buy}</a></div>
                 </div>
               </article>
             ))}
@@ -89,16 +94,16 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="trust-section"><div className="container trust-grid">
-        <div><b>01</b><h3>Tested before sale</h3><p>We focus on products that are checked before they reach you.</p></div>
-        <div><b>02</b><h3>Clear communication</h3><p>Confirm availability, condition and price directly with TATIOR.</p></div>
-        <div><b>03</b><h3>Human support</h3><p>Need advice? Tell us what you need and we help you choose.</p></div>
+      {category==="All" && <section className="trust-section"><div className="container trust-grid">
+        <div><b>01</b><h3>{t.trust1}</h3><p>{t.trust1p}</p></div>
+        <div><b>02</b><h3>{t.trust2}</h3><p>{t.trust2p}</p></div>
+        <div><b>03</b><h3>{t.trust3}</h3><p>{t.trust3p}</p></div>
       </div></section>
 
       <section id="contact" className="contact-section"><div className="container contact-box">
-        <div><div className="kicker">NEED SOMETHING?</div><h2>Tell us what<br/>you&apos;re looking for.</h2></div>
-        <div><p>Send us your budget, preferred device or exact model. We&apos;ll check availability and get back to you.</p><a className="btn gold" href={wa({id:"contact",name:"un produit",category:"",brand:"",price:0,condition:"",stock:0,images:[],description:"",specs:[]})} target="_blank" rel="noreferrer">Contact TATIOR on WhatsApp ↗</a></div>
-      </div></section>
+        <div><div className="kicker">{t.need}</div><h2>{t.contactTitle}</h2></div>
+        <div><p>{t.contactText}</p><a className="btn gold" href={wa({id:"contact",name:"un produit",category:"",brand:"",price:0,condition:"",stock:0,images:[],description:"",specs:[]})} target="_blank" rel="noreferrer">{t.contact}</a></div>
+      </div></section>}
 
       <footer><div className="container footer-inner"><a className="logo" href="/">TATIOR</a><span>Technology · Electronics · More</span><span>© {new Date().getFullYear()} TATIOR</span></div></footer>
 
@@ -109,13 +114,13 @@ export default function Home() {
             <div className="modal-image"><img src={selected.images[selectedImage] ?? selected.images[0]} alt={selected.name}/><span className={selected.stock>0?"stock-badge":"stock-badge stock-out"}>{stockLabel(selected.stock)}</span></div>
             <div className="modal-gallery">{selected.images.slice(0,4).map((img,i)=><button key={`${selected.id}-${i}`} className={selectedImage===i?"gallery-thumb active":"gallery-thumb"} onClick={()=>setSelectedImage(i)} aria-label={`Voir photo ${i+1}`}><img src={img} alt={`${selected.name} vue ${i+1}`}/></button>)}</div>
             <div className="modal-content">
-              <div className="product-meta"><span>{selected.brand}</span><span>{selected.category}</span></div>
+              <div className="product-meta"><span>{selected.brand}</span><span>{categoryLabel(selected.category)}</span></div>
               <h2>{selected.name}</h2>
               <div className="modal-price"><strong>{money(selected.price)}</strong>{selected.oldPrice&&<del>{money(selected.oldPrice)}</del>}</div>
               <p className="modal-description">{selected.description}</p>
-              <div className="modal-condition">État : <strong>{selected.condition}</strong></div>
-              <div className="modal-spec-block"><div className="kicker">CARACTÉRISTIQUES</div><div className="modal-specs">{selected.specs.map(s=><div key={s}>✓ <span>{s}</span></div>)}</div></div>
-              <a className="btn gold modal-buy" href={wa(selected)} target="_blank" rel="noreferrer">Acheter sur WhatsApp ↗</a>
+              <div className="modal-condition">{t.condition} : <strong>{textFor(selected).condition}</strong></div>
+              <div className="modal-spec-block"><div className="kicker">{t.specs}</div><div className="modal-specs">{textFor(selected).specs.map(s=><div key={s}>✓ <span>{s}</span></div>)}</div></div>
+              <a className="btn gold modal-buy" href={wa(selected)} target="_blank" rel="noreferrer">{t.buyWhats}</a>
             </div>
           </div>
         </div>
