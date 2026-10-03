@@ -1,0 +1,219 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+type Product = {
+  id: string;
+  name: string;
+  category: string;
+  brand: string;
+  price: number;
+  oldPrice?: number;
+  condition: string;
+  image: string;
+  description: string;
+  specs: string[];
+};
+
+const products: Product[] = [
+  {
+    id: "t480",
+    name: "ThinkPad T480",
+    category: "Laptops",
+    brand: "Lenovo",
+    price: 180000,
+    oldPrice: 200000,
+    condition: "Refurbished",
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1000&q=85",
+    description: "Reliable business laptop for work, study and everyday productivity.",
+    specs: ["Core i5", "8GB RAM", "256GB SSD"],
+  },
+  {
+    id: "elitebook",
+    name: "EliteBook 840 G5",
+    category: "Laptops",
+    brand: "HP",
+    price: 195000,
+    oldPrice: 220000,
+    condition: "Refurbished",
+    image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=1000&q=85",
+    description: "Premium business notebook with a clean professional design.",
+    specs: ["Core i5", "8GB RAM", "256GB SSD"],
+  },
+  {
+    id: "monitor",
+    name: "24-inch Full HD Monitor",
+    category: "Monitors",
+    brand: "TATIOR",
+    price: 85000,
+    condition: "New",
+    image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85",
+    description: "Sharp Full HD display for office work, content and trading.",
+    specs: ["24 inch", "Full HD", "HDMI / VGA"],
+  },
+  {
+    id: "ssd",
+    name: "512GB NVMe SSD",
+    category: "Accessories",
+    brand: "Kingston",
+    price: 45000,
+    condition: "New",
+    image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1000&q=85",
+    description: "Fast storage upgrade for compatible laptops and desktops.",
+    specs: ["512GB", "NVMe", "High speed"],
+  },
+  {
+    id: "iphone",
+    name: "iPhone",
+    category: "Phones",
+    brand: "Apple",
+    price: 0,
+    condition: "Available on request",
+    image: "https://images.unsplash.com/photo-1592286927505-2fd0f17f2a6f?auto=format&fit=crop&w=1000&q=85",
+    description: "Ask TATIOR for current iPhone models and prices.",
+    specs: ["Multiple models", "Warranty options", "Price on request"],
+  },
+  {
+    id: "android",
+    name: "Android Phones",
+    category: "Phones",
+    brand: "Various",
+    price: 0,
+    condition: "Available on request",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=85",
+    description: "A selection of Android smartphones available through TATIOR.",
+    specs: ["Multiple brands", "Multiple budgets", "Price on request"],
+  },
+];
+
+const categories = ["All", "Laptops", "Phones", "Monitors", "Accessories"];
+const money = (n: number) =>
+  n ? new Intl.NumberFormat("fr-FR").format(n) + " FCFA" : "Sur demande";
+
+const wa = (p: Product) =>
+  "https://wa.me/237000000000?text=" +
+  encodeURIComponent(
+    `Bonjour TATIOR, je suis intéressé par: ${p.name}. Pouvez-vous confirmer la disponibilité et le prix ?`
+  );
+
+export default function Home() {
+  const [category, setCategory] = useState("All");
+  const [query, setQuery] = useState("");
+
+  const filtered = useMemo(
+    () =>
+      products.filter(
+        (p) =>
+          (category === "All" || p.category === category) &&
+          `${p.name} ${p.brand} ${p.category}`
+            .toLowerCase()
+            .includes(query.toLowerCase())
+      ),
+    [category, query]
+  );
+
+  return (
+    <main>
+      <header className="site-header">
+        <div className="container header-inner">
+          <a href="/" className="logo">TATIOR</a>
+          <div className="search">
+            <span>⌕</span>
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Rechercher un produit..." />
+          </div>
+          <div className="header-actions">
+            <a href="#products" className="header-link">Produits</a>
+            <a href="#contact" className="whatsapp-top">WhatsApp</a>
+          </div>
+        </div>
+        <div className="category-bar">
+          <div className="container categories">
+            {categories.map((c) => (
+              <button key={c} className={category === c ? "active" : ""} onClick={() => setCategory(c)}>
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <section className="hero-shop">
+        <div className="container hero-grid">
+          <div className="hero-copy-shop">
+            <div className="kicker">TATIOR · TECHNOLOGY</div>
+            <h1>Technology<br /><em>that works.</em></h1>
+            <p>Laptops, phones, accessories and technology selected for work, study and everyday life.</p>
+            <div className="hero-buttons">
+              <a className="btn gold" href="#products">Voir les produits</a>
+              <a className="btn outline" href="#contact">Parler à TATIOR</a>
+            </div>
+            <div className="mini-proof">
+              <span><b>✓</b> Produits testés</span>
+              <span><b>✓</b> Assistance humaine</span>
+              <span><b>✓</b> Achat local</span>
+            </div>
+          </div>
+          <div className="hero-visual">
+            <div className="hero-card">
+              <span>TATIOR</span>
+              <strong>YOUR<br />TECH.<br /><i>SIMPLIFIED.</i></strong>
+              <small>SELECTED TECHNOLOGY</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="products" className="products-section">
+        <div className="container">
+          <div className="section-head">
+            <div><div className="kicker">CATALOGUE</div><h2>Find your next device.</h2></div>
+            <span>{filtered.length} produits</span>
+          </div>
+          <div className="product-grid">
+            {filtered.map((p) => (
+              <article className="product-card" key={p.id}>
+                <div className="product-image"><img src={p.image} alt={p.name} /><span>{p.condition}</span></div>
+                <div className="product-body">
+                  <div className="product-meta"><span>{p.brand}</span><span>{p.category}</span></div>
+                  <h3>{p.name}</h3>
+                  <p>{p.description}</p>
+                  <div className="specs">{p.specs.map((s) => <span key={s}>{s}</span>)}</div>
+                  <div className="product-bottom">
+                    <div><strong>{money(p.price)}</strong>{p.oldPrice && <del>{money(p.oldPrice)}</del>}</div>
+                    <a href={wa(p)} target="_blank" rel="noreferrer" className="buy">Acheter ↗</a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="trust-section">
+        <div className="container trust-grid">
+          <div><b>01</b><h3>Tested before sale</h3><p>We focus on products that are checked before they reach you.</p></div>
+          <div><b>02</b><h3>Clear communication</h3><p>Confirm availability, condition and price directly with TATIOR.</p></div>
+          <div><b>03</b><h3>Human support</h3><p>Need advice? Tell us what you need and we help you choose.</p></div>
+        </div>
+      </section>
+
+      <section id="contact" className="contact-section">
+        <div className="container contact-box">
+          <div><div className="kicker">NEED SOMETHING?</div><h2>Tell us what<br />you&apos;re looking for.</h2></div>
+          <div>
+            <p>Send us your budget, preferred device or exact model. We&apos;ll check availability and get back to you.</p>
+            <a className="btn gold" href={wa({id:"contact",name:"un produit",category:"",brand:"",price:0,condition:"",image:"",description:"",specs:[]})} target="_blank" rel="noreferrer">Contact TATIOR on WhatsApp ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div className="container footer-inner">
+          <a className="logo" href="/">TATIOR</a>
+          <span>Technology · Electronics · More</span>
+          <span>© {new Date().getFullYear()} TATIOR</span>
+        </div>
+      </footer>
+    </main>
+  );
+}
