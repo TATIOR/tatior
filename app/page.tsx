@@ -43,7 +43,23 @@ const [query,setQuery]=useState("");
 const [selected,setSelected]=useState<Product|null>(null);
 const [selectedImage,setSelectedImage]=useState(0);
 const t=ui[language];
-const getText=(p:Product)=>translations[p.id]?.[language]||{d:p.description,c:p.condition,s:p.specs};
+const getText=(p:Product)=>{
+  if(p.descFr||p.descEn) return {d:language==="fr"?(p.descFr||p.description):(p.descEn||p.description),c:language==="fr"?(p.conditionFr||p.condition):(p.conditionEn||p.condition),s:language==="fr"?(p.specsFr||p.specs):(p.specsEn||p.specs)};
+  return translations[p.id]?.[language]||{d:p.description,c:p.condition,s:p.specs};
+};
+const getShort=(p:Product)=>language==="fr"?(p.shortFr||getText(p).d):(p.shortEn||getText(p).d);
+useEffect(()=>{
+  if(!supabase)return;
+  supabase.from("products").select("*").order("created_at",{ascending:false}).then(({data,error})=>{
+    if(!error && data?.length)setCatalog(data.map((p:any)=>({
+      id:p.id,name:p.name_en,category:p.category,brand:p.brand,price:p.price,oldPrice:p.old_price,
+      condition:p.condition_en,stock:p.stock,images:Array.isArray(p.images)?p.images:[],description:p.description_en,
+      specs:Array.isArray(p.specs_en)?p.specs_en:[],shortFr:p.short_message_fr,shortEn:p.short_message_en,
+      descFr:p.description_fr,descEn:p.description_en,conditionFr:p.condition_fr,conditionEn:p.condition_en,
+      specsFr:Array.isArray(p.specs_fr)?p.specs_fr:[],specsEn:Array.isArray(p.specs_en)?p.specs_en:[]
+    })));
+  });
+},[]);
 const label=(c:string)=>c==="All"?t.all:(t as any)[c]||c;
 const stock=(n:number)=>n>5?t.inStock:n>0?(language==="fr"?"Plus que "+n+" en stock":"Only "+n+" left"):t.order;
 const wa=(p:Product)=>"https://wa.me/237000000000?text="+encodeURIComponent(language==="fr"?"Bonjour TATIOR, je suis intéressé par: "+p.name+". Pouvez-vous confirmer la disponibilité et le prix ?":"Hello TATIOR, I am interested in: "+p.name+". Can you confirm availability and price?");
