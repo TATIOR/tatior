@@ -11,18 +11,18 @@ type Product = {
   oldPrice?: number;
   condition: string;
   stock: number;
-  image: string;
+  images: string[];
   description: string;
   specs: string[];
 };
 
 const products: Product[] = [
-  { id:"t480", name:"ThinkPad T480", category:"Laptops", brand:"Lenovo", price:180000, oldPrice:200000, condition:"Refurbished", stock:4, image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1000&q=85", description:"Reliable business laptop for work, study and everyday productivity.", specs:["Intel Core i5","8GB RAM","256GB SSD","14-inch Full HD","Wi-Fi / Bluetooth"] },
-  { id:"elitebook", name:"EliteBook 840 G5", category:"Laptops", brand:"HP", price:195000, oldPrice:220000, condition:"Refurbished", stock:2, image:"https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=1000&q=85", description:"Premium business notebook with a clean professional design.", specs:["Intel Core i5","8GB RAM","256GB SSD","14-inch Full HD","Wi-Fi / Bluetooth"] },
-  { id:"monitor", name:"24-inch Full HD Monitor", category:"Monitors", brand:"TATIOR", price:85000, condition:"New", stock:6, image:"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85", description:"Sharp Full HD display for office work, content and trading.", specs:["24 inch","Full HD 1920×1080","HDMI / VGA","16:9 display","60Hz"] },
-  { id:"ssd", name:"512GB NVMe SSD", category:"Accessories", brand:"Kingston", price:45000, condition:"New", stock:8, image:"https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1000&q=85", description:"Fast storage upgrade for compatible laptops and desktops.", specs:["512GB","NVMe","High speed","PCIe interface","5-year warranty"] },
-  { id:"iphone", name:"iPhone", category:"Phones", brand:"Apple", price:0, condition:"Available on request", stock:0, image:"https://images.unsplash.com/photo-1592286927505-2fd0f17f2a6f?auto=format&fit=crop&w=1000&q=85", description:"Ask TATIOR for current iPhone models and prices.", specs:["Multiple models","Warranty options","Price on request"] },
-  { id:"android", name:"Android Phones", category:"Phones", brand:"Various", price:0, condition:"Available on request", stock:0, image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=85", description:"A selection of Android smartphones available through TATIOR.", specs:["Multiple brands","Multiple budgets","Price on request"] },
+  { id:"t480", name:"ThinkPad T480", category:"Laptops", brand:"Lenovo", price:180000, oldPrice:200000, condition:"Refurbished", stock:4, images:["https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=1000&q=85"], description:"Reliable business laptop for work, study and everyday productivity.", specs:["Intel Core i5","8GB RAM","256GB SSD","14-inch Full HD","Wi-Fi / Bluetooth"] },
+  { id:"elitebook", name:"EliteBook 840 G5", category:"Laptops", brand:"HP", price:195000, oldPrice:220000, condition:"Refurbished", stock:2, images:["https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=1000&q=85"], description:"Premium business notebook with a clean professional design.", specs:["Intel Core i5","8GB RAM","256GB SSD","14-inch Full HD","Wi-Fi / Bluetooth"] },
+  { id:"monitor", name:"24-inch Full HD Monitor", category:"Monitors", brand:"TATIOR", price:85000, condition:"New", stock:6, images:["https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1547394765-185e1e68f34e?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1000&q=85"], description:"Sharp Full HD display for office work, content and trading.", specs:["24 inch","Full HD 1920×1080","HDMI / VGA","16:9 display","60Hz"] },
+  { id:"ssd", name:"512GB NVMe SSD", category:"Accessories", brand:"Kingston", price:45000, condition:"New", stock:8, images:["https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1531492746076-161ca9b8e7c2?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1593642532744-d377ab507dc8?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=1000&q=85"], description:"Fast storage upgrade for compatible laptops and desktops.", specs:["512GB","NVMe","High speed","PCIe interface","5-year warranty"] },
+  { id:"iphone", name:"iPhone", category:"Phones", brand:"Apple", price:0, condition:"Available on request", stock:0, images:["https://images.unsplash.com/photo-1592286927505-2fd0f17f2a6f?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1556656793-08538906a9f8?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=85"], description:"Ask TATIOR for current iPhone models and prices.", specs:["Multiple models","Warranty options","Price on request"] },
+  { id:"android", name:"Android Phones", category:"Phones", brand:"Various", price:0, condition:"Available on request", stock:0, images:["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1556656793-08538906a9f8?auto=format&fit=crop&w=1000&q=85","https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=85"], description:"A selection of Android smartphones available through TATIOR.", specs:["Multiple brands","Multiple budgets","Price on request"] },
 ];
 
 const categories = ["All","Laptops","Phones","Monitors","Accessories"];
@@ -34,6 +34,7 @@ export default function Home() {
   const [category,setCategory] = useState("All");
   const [query,setQuery] = useState("");
   const [selected,setSelected] = useState<Product|null>(null);
+  const [selectedImage,setSelectedImage] = useState(0);
 
   const filtered = useMemo(() => products.filter(p =>
     (category==="All" || p.category===category) &&
@@ -70,14 +71,14 @@ export default function Home() {
           <div className="product-grid">
             {filtered.map(p=>(
               <article className="product-card" key={p.id}>
-                <button className="product-image product-image-button" onClick={()=>setSelected(p)} aria-label={`Voir ${p.name}`}>
-                  <img src={p.image} alt={p.name}/><span className="condition-badge">{p.condition}</span>
+                <button className="product-image product-image-button" onClick={()=>{setSelected(p);setSelectedImage(0)}} aria-label={`Voir ${p.name}`}>
+                  <img src={p.images[0]} alt={p.name}/><span className="condition-badge">{p.condition}</span>
                   <span className={p.stock>0?"stock-badge":"stock-badge stock-out"}>{stockLabel(p.stock)}</span>
                   <span className="view-badge">Voir la fiche ↗</span>
                 </button>
                 <div className="product-body">
                   <div className="product-meta"><span>{p.brand}</span><span>{p.category}</span></div>
-                  <button className="product-title-button" onClick={()=>setSelected(p)}><h3>{p.name}</h3></button>
+                  <button className="product-title-button" onClick={()=>setSelected(p);setSelectedImage(0)}}><h3>{p.name}</h3></button>
                   <p>{p.description}</p>
                   <div className="specs">{p.specs.slice(0,3).map(s=><span key={s}>{s}</span>)}</div>
                   <div className="product-bottom"><div><strong>{money(p.price)}</strong>{p.oldPrice&&<del>{money(p.oldPrice)}</del>}</div><a href={wa(p)} target="_blank" rel="noreferrer" className="buy">Acheter ↗</a></div>
@@ -96,7 +97,7 @@ export default function Home() {
 
       <section id="contact" className="contact-section"><div className="container contact-box">
         <div><div className="kicker">NEED SOMETHING?</div><h2>Tell us what<br/>you&apos;re looking for.</h2></div>
-        <div><p>Send us your budget, preferred device or exact model. We&apos;ll check availability and get back to you.</p><a className="btn gold" href={wa({id:"contact",name:"un produit",category:"",brand:"",price:0,condition:"",stock:0,image:"",description:"",specs:[]})} target="_blank" rel="noreferrer">Contact TATIOR on WhatsApp ↗</a></div>
+        <div><p>Send us your budget, preferred device or exact model. We&apos;ll check availability and get back to you.</p><a className="btn gold" href={wa({id:"contact",name:"un produit",category:"",brand:"",price:0,condition:"",stock:0,images:[],description:"",specs:[]})} target="_blank" rel="noreferrer">Contact TATIOR on WhatsApp ↗</a></div>
       </div></section>
 
       <footer><div className="container footer-inner"><a className="logo" href="/">TATIOR</a><span>Technology · Electronics · More</span><span>© {new Date().getFullYear()} TATIOR</span></div></footer>
@@ -105,7 +106,7 @@ export default function Home() {
         <div className="product-modal-backdrop" onClick={()=>setSelected(null)}>
           <div className="product-modal" role="dialog" aria-modal="true" aria-label={selected.name} onClick={e=>e.stopPropagation()}>
             <button className="modal-close" onClick={()=>setSelected(null)} aria-label="Fermer">×</button>
-            <div className="modal-image"><img src={selected.image} alt={selected.name}/><span className={selected.stock>0?"stock-badge":"stock-badge stock-out"}>{stockLabel(selected.stock)}</span></div>
+            <div className="modal-image"><img src={selected.images[selectedImage] ?? selected.images[0]} alt={selected.name}/><span className={selected.stock>0?"stock-badge":"stock-badge stock-out"}>{stockLabel(selected.stock)}</span></div>
             <div className="modal-content">
               <div className="product-meta"><span>{selected.brand}</span><span>{selected.category}</span></div>
               <h2>{selected.name}</h2>
