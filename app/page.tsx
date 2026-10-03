@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 type Lang = "fr" | "en";
 type Product = {
@@ -36,7 +37,7 @@ android:{fr:{d:"Une sélection de smartphones Android disponible chez TATIOR.",c
 const money=(n:number)=>n?new Intl.NumberFormat("fr-FR").format(n)+" FCFA":"Sur demande";
 
 export default function Home(){
-const [category,setCategory]=useState("All");
+const [category,setCategory]=useState("All");\nconst [catalog,setCatalog]=useState<Product[]>(products);
 const [language,setLanguage]=useState<Lang>("fr");
 const [query,setQuery]=useState("");
 const [selected,setSelected]=useState<Product|null>(null);
@@ -46,7 +47,7 @@ const getText=(p:Product)=>translations[p.id]?.[language]||{d:p.description,c:p.
 const label=(c:string)=>c==="All"?t.all:(t as any)[c]||c;
 const stock=(n:number)=>n>5?t.inStock:n>0?(language==="fr"?"Plus que "+n+" en stock":"Only "+n+" left"):t.order;
 const wa=(p:Product)=>"https://wa.me/237000000000?text="+encodeURIComponent(language==="fr"?"Bonjour TATIOR, je suis intéressé par: "+p.name+". Pouvez-vous confirmer la disponibilité et le prix ?":"Hello TATIOR, I am interested in: "+p.name+". Can you confirm availability and price?");
-const filtered=useMemo(()=>products.filter(p=>(category==="All"||p.category===category)&&(p.name+" "+p.brand+" "+p.category).toLowerCase().includes(query.toLowerCase())),[category,query]);
+const filtered=useMemo(()=>catalog.filter(p=>(category==="All"||p.category===category)&&(p.name+" "+p.brand+" "+p.category).toLowerCase().includes(query.toLowerCase())),[category,query]);
 
 return <main>
 <header className="site-header">
@@ -60,7 +61,7 @@ return <main>
 
 {category==="All"&&<section className="hero-shop"><div className="container hero-grid"><div className="hero-copy-shop"><div className="kicker">{language==="fr"?"TATIOR · TECHNOLOGIE":"TATIOR · TECHNOLOGY"}</div><h1>{language==="fr"?"La technologie":"Technology"}<br/><em>{language==="fr"?"qui fonctionne.":"that works."}</em></h1><p>{language==="fr"?"Ordinateurs, téléphones, accessoires et technologies sélectionnés pour le travail, les études et la vie quotidienne.":"Laptops, phones, accessories and technology selected for work, study and everyday life."}</p><div className="hero-buttons"><a className="btn gold" href="#products">{language==="fr"?"Voir les produits":"View products"}</a><a className="btn outline" href="#contact">{language==="fr"?"Parler à TATIOR":"Talk to TATIOR"}</a></div><div className="mini-proof"><span><b>✓</b> {language==="fr"?"Produits testés":"Tested products"}</span><span><b>✓</b> {language==="fr"?"Assistance humaine":"Human support"}</span><span><b>✓</b> {language==="fr"?"Achat local":"Local purchase"}</span></div></div><div className="hero-visual"><div className="hero-card"><span>TATIOR</span><strong>YOUR<br/>TECH.<br/><i>SIMPLIFIED.</i></strong><small>SELECTED TECHNOLOGY</small></div></div></div></section>}
 
-<section id="products" className="products-section"><div className="container"><div className="section-head"><div><div className="kicker">{t.catalogue}</div><h2>{category==="All"?t.title:label(category)}</h2></div><span>{filtered.length} {t.count}</span></div><div className="product-grid">{filtered.map(p=>{const x=getText(p);return <article className="product-card" key={p.id}><button className="product-image product-image-button" onClick={()=>{setSelected(p);setSelectedImage(0)}} aria-label={p.name}><img src={p.images[0]} alt={p.name}/><span className="condition-badge">{x.c}</span><span className={p.stock>0?"stock-badge":"stock-badge stock-out"}>{stock(p.stock)}</span><span className="view-badge">{t.view}</span></button><div className="product-body"><div className="product-meta"><span>{p.brand}</span><span>{label(p.category)}</span></div><button className="product-title-button" onClick={()=>{setSelected(p);setSelectedImage(0)}}><h3>{p.name}</h3></button><p>{x.d}</p><div className="specs">{x.s.slice(0,3).map((v:string)=><span key={v}>{v}</span>)}</div><div className="product-bottom"><div><strong>{money(p.price)}</strong>{p.oldPrice&&<del>{money(p.oldPrice)}</del>}</div><a href={wa(p)} target="_blank" rel="noreferrer" className="buy">{t.buy}</a></div></div></article>})}</div></div></section>
+<section id="products" className="products-section"><div className="container"><div className="section-head"><div><div className="kicker">{t.catalogue}</div><h2>{category==="All"?t.title:label(category)}</h2></div><span>{filtered.length} {t.count}</span></div><div className="product-grid">{filtered.map(p=>{const x=getText(p);return <article className="product-card" key={p.id}><button className="product-image product-image-button" onClick={()=>{setSelected(p);setSelectedImage(0)}} aria-label={p.name}><img src={p.images[0]} alt={p.name}/><span className="condition-badge">{x.c}</span><span className={p.stock>0?"stock-badge":"stock-badge stock-out"}>{stock(p.stock)}</span><span className="view-badge">{t.view}</span></button><div className="product-body"><div className="product-meta"><span>{p.brand}</span><span>{label(p.category)}</span></div><button className="product-title-button" onClick={()=>{setSelected(p);setSelectedImage(0)}}><h3>{p.name}</h3></button><p>{getShort(p)}</p><div className="specs">{x.s.slice(0,3).map((v:string)=><span key={v}>{v}</span>)}</div><div className="product-bottom"><div><strong>{money(p.price)}</strong>{p.oldPrice&&<del>{money(p.oldPrice)}</del>}</div><a href={wa(p)} target="_blank" rel="noreferrer" className="buy">{t.buy}</a></div></div></article>})}</div></div></section>
 
 {category==="All"&&<><section className="trust-section"><div className="container trust-grid"><div><b>01</b><h3>{t.trust1}</h3><p>{t.trust1p}</p></div><div><b>02</b><h3>{t.trust2}</h3><p>{t.trust2p}</p></div><div><b>03</b><h3>{t.trust3}</h3><p>{t.trust3p}</p></div></div></section><section id="contact" className="contact-section"><div className="container contact-box"><div><div className="kicker">{t.need}</div><h2>{t.contactTitle}</h2></div><div><p>{t.contactText}</p><a className="btn gold" href={wa({id:"contact",name:"un produit",category:"",brand:"",price:0,condition:"",stock:0,images:[],description:"",specs:[]})} target="_blank" rel="noreferrer">{t.contact}</a></div></div></section></>}
 
