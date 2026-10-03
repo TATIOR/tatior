@@ -42,7 +42,7 @@ export default function Home() {
 
   const filtered = useMemo(() => products.filter(p => (category==="All" || p.category===category) && (p.name+" "+p.brand+" "+p.category).toLowerCase().includes(query.toLowerCase())), [category,query]);
   const categoryLabel=(c:string)=>({All:t.all,Laptops:t.laptops,Phones:t.phones,Monitors:t.monitors,Accessories:t.accessories}[c] ?? c);
-  const textFor=(p:Product)=>({description:p.description,condition:p.condition,specs:p.specs});
+  const textFor=(p:Product)=>{const x=productCopy[p.id]?.[language];return x?{description:x.d,condition:x.c,specs:x.s}:{description:p.description,condition:p.condition,specs:p.specs};};
   const stockLabel=(stock:number)=>stock>5?t.inStock:stock>0?(language==="fr"?"Plus que "+stock+" en stock":"Only "+stock+" left"):t.order;
   const wa=(p:Product)=>"https://wa.me/237000000000?text="+encodeURIComponent((language==="fr"?"Bonjour TATIOR, je suis intéressé par: ":"Hello TATIOR, I am interested in: ")+p.name);
 
@@ -105,7 +105,7 @@ export default function Home() {
         <div><p>{t.contactText}</p><a className="btn gold" href={wa({id:"contact",name:"un produit",category:"",brand:"",price:0,condition:"",stock:0,images:[],description:"",specs:[]})} target="_blank" rel="noreferrer">{t.contact}</a></div>
       </div></section>}
 
-      <footer><div className="container footer-inner"><a className="logo" href="/">TATIOR</a><span>Technology · Electronics · More</span><span>© {new Date().getFullYear()} TATIOR</span></div></footer>
+      <footer><div className="container footer-inner"><a className="logo" href="/">TATIOR</a><span>{language==="fr"?"Technologie · Électronique · Plus":"Technology · Electronics · More"}</span><span>© {new Date().getFullYear()} TATIOR</span></div></footer>
 
       {selected && (
         <div className="product-modal-backdrop" onClick={()=>setSelected(null)}>
